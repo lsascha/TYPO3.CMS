@@ -325,6 +325,14 @@ class RootlineUtility
                                     \PDO::PARAM_INT
                                 )
                             )
+                        )->andWhere( // @todo better fix for workspace
+                            $queryBuilder->expr()->eq(
+                                't3ver_wsid',
+                                $queryBuilder->createNamedParameter(
+                                    $this->workspaceUid,
+                                    \PDO::PARAM_INT
+                                )
+                            )
                         );
 
                     if (isset($configuration['foreign_match_fields']) && is_array($configuration['foreign_match_fields'])) {
