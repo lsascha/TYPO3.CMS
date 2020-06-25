@@ -53,7 +53,6 @@ class PreviewSimulator implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ((bool)$this->context->getPropertyFromAspect('backend.user', 'isLoggedIn', false)) {
-            $GLOBALS['TSFE']->clear_preview();
             $simulatingDate = $this->simulateDate($request);
             $simulatingGroup = $this->simulateUserGroup($request);
             $GLOBALS['TSFE']->fePreview = ((int)($simulatingDate || $simulatingGroup));
@@ -78,6 +77,9 @@ class PreviewSimulator implements MiddlewareInterface
     {
         $simulatedDate = null;
         $queryTime = $request->getQueryParams()['ADMCMD_simTime'] ?? false;
+        if ($queryTime === false && $GLOBALS['SIM_ACCESS_TIME'] !== $GLOBALS['ACCESS_TIME']) {
+            $queryTime = $GLOBALS['SIM_ACCESS_TIME'];
+        }
         if (!$queryTime) {
             return false;
         }
